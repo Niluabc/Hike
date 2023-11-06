@@ -32,6 +32,7 @@ struct SettingsView: View {
                             ForEach(alternateAppIcons.indices, id: \.self) { item in
                                 Button {
                                     print("\(alternateAppIcons[item])-Preview Icon pressed")
+                                    //Setup alternate app icon
                                     UIApplication.shared.setAlternateIconName(alternateAppIcons[item]) { error in
                                         if error != nil {
                                             print("Failed to update alternate app icon: \(String(describing: error?.localizedDescription))")
