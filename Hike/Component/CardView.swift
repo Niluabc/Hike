@@ -8,6 +8,26 @@
 import SwiftUI
 
 struct CardView: View {
+    // MARK: Properties
+    @State private var imageNumber: Int = 1
+    @State private var randomNumber: Int = 1
+    @State private var isShowingSheet: Bool = false
+    
+    //MARK: Functions
+    func randomImage() {
+        print("--- Button Pressed ---")
+        print("Old image number = \(imageNumber)")
+        repeat {
+            randomNumber = Int.random(in: 1...5)
+            print("Random number generated = \(randomNumber)")
+        } while randomNumber == imageNumber
+        imageNumber = randomNumber
+        
+        print("New image number = \(imageNumber)")
+        print("--- End Result ---")
+        print("\n")
+    }
+    
     var body: some View {
         ZStack {
             CustomBackgroundView()
@@ -28,9 +48,15 @@ struct CardView: View {
                         Button {
                             //Show a sheet
                             print("The button was pressed.")
+                            isShowingSheet.toggle()
                         } label: {
                             CustomButtonView()
                         }
+                        .sheet(isPresented: $isShowingSheet, content: {
+                            SettingsView()
+                                .presentationDragIndicator(.visible)
+                                .presentationDetents([.medium, .large])
+                        })
                     }
                     
                     // MARK: Main content
@@ -43,20 +69,19 @@ struct CardView: View {
                 
                 
                 ZStack {
-                    Circle()
-                        .fill(
-                            LinearGradient(colors: [Color("ColorIndigoMedium"), Color("ColorSalmonLight")], startPoint: .topLeading, endPoint: .bottomTrailing)
-                        )
-                        .frame(width: 256, height: 256)
-                    Image("image-1")
+                    CustomCircleView()
+                    
+                    Image("image-\(randomNumber)")
                         .resizable()
                     .scaledToFit()
+                    //Value: Everytime randomNumber value changes triggers this animation
+                    .animation(.easeOut(duration: 3), value: randomNumber)
                 }
                 
                 // MARK: Footer
                 Button {
                     //Action: Generate a random number
-                    print("Explore more button tapped")
+                    randomImage()
                 } label: {
                     Text("Explore More")
                         .font(.title2)
